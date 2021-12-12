@@ -2,38 +2,31 @@ let addToy = false;
 
 const toyCollection = document.querySelector("#toy-collection")
 
+
 function fetchToys() {
   fetch("http://localhost:3000/toys")
   .then(response => response.json())
   .then(toys => {
-    
-    toys.map(toy => {
-      
-      let toyDiv = document.createElement('div')
-      toyDiv.className = 'card'
-      toyDiv.innerHTML += `
-      <h2>${toy.name}</h2>
-      <img src=${toy.image} class="toy-avatar"/>
-      <p>${toy.likes}</p>
-      <button>like-btn</button>
-      `
-      toyCollection.appendChild(toyDiv)
-    })
+
+    toys.map(toy => 
+      createToyCard(toy)
+    )
     console.log("toys array", toys)
   }
   )
 }
 
-// function createToyCard(toyDiv){
-//     toyDiv.className = 'card'
-//     toyDiv.innerHTML += `
-//     <h2>${toy.name}</h2>
-//     <img src=${toy.image} class="toy-avatar"/>
-//     <p>${toy.likes}</p>
-//     <button>like-btn</button>
-//     `
-//     toyCollection.appendChild(toyDiv)
-// }
+function createToyCard(toy){
+  let toyDiv = document.createElement('div')
+  toyDiv.className = 'card'
+  toyDiv.innerHTML += `
+  <h2>${toy.name}</h2>
+  <img src=${toy.image} class="toy-avatar"/>
+  <p>${toy.likes}</p>
+  <button class=like-btn id=${toy.id}>like-btn</button>
+  `
+  toyCollection.appendChild(toyDiv)
+}
 
 function handleFormSubmit(event){
   event.preventDefault()
@@ -55,18 +48,10 @@ function handleFormSubmit(event){
   
   fetch('http://localhost:3000/toys', newToyObj)
   .then(response => response.json())
-  .then(newToy => {
+  .then(toy => {
     event.target.reset()
-    let toyDiv = document.createElement('div')
-    toyDiv.className = 'card'
-    toyDiv.innerHTML += `
-    <h2>${newToy.name}</h2>
-    <img src=${newToy.image} class="toy-avatar"/>
-    <p>${newToy.likes}</p>
-    <button>like-btn</button>
-    `
-    toyCollection.appendChild(toyDiv)
-    console.log("Added Toy", newToy)
+    createToyCard(toy)
+    console.log("Added New Toy", toy)
   }
 
   )
